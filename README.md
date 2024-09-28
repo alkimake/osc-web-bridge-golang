@@ -63,6 +63,3 @@ just osc_client
 ```
 
 
-## License
-
-This project is licensed under the MIT License.
