@@ -23,12 +23,18 @@
         h1 {
             text-align: center;
         }
+        #historyList {
+            font-family: monospace; /* Set fixed-width font */
+        }
     </style>
 </head>
 <body>
     <h1>Multicast Data Monitor</h1>
     <div id="dataDisplay">Waiting for multicast data...</div>
-
+    <div id="messageHistory" style="margin: 20px; padding: 10px; background-color: #fff; border: 1px solid #ccc; border-radius: 5px; max-width: 600px; word-wrap: break-word;">
+        <h4>Message History</h4>
+        <ul id="historyList"></ul>
+    </div>
     <script>
         // Create a WebSocket connection to the server
         var socket = new WebSocket("ws://localhost:8080/ws");
@@ -41,8 +47,20 @@
         // Event handler for receiving messages from the WebSocket
         socket.onmessage = function(event) {
             console.log("Received multicast message from server: ", event.data);
+            console.log("Received multicast message from server: ", event.data);
             // Display the received data in the HTML page
             document.getElementById('dataDisplay').textContent = event.data;
+
+            // Parse the JSON message
+            try {
+                var message = JSON.parse(event.data);
+                var historyList = document.getElementById('historyList');
+                var listItem = document.createElement('li');
+                listItem.textContent = `Address: ${message.Address}, Arguments: ${message.Arguments.join(', ')}`;
+                historyList.appendChild(listItem);
+            } catch (e) {
+                console.error("Failed to parse message: ", e);
+            }
         };
 
         // Event handler for any errors in the WebSocket connection
