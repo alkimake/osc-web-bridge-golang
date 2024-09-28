@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multicast Data Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        #dataDisplay {
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 600px;
+            word-wrap: break-word;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Multicast Data Monitor</h1>
+    <div id="dataDisplay">Waiting for multicast data...</div>
+
+    <script>
+        // Create a WebSocket connection to the server
+        var socket = new WebSocket("ws://localhost:8080/ws");
+
+        // Event handler for when the WebSocket connection is opened
+        socket.onopen = function() {
+            console.log("WebSocket connection established");
+        };
+
+        // Event handler for receiving messages from the WebSocket
+        socket.onmessage = function(event) {
+            console.log("Received multicast message from server: ", event.data);
+            // Display the received data in the HTML page
+            document.getElementById('dataDisplay').textContent = event.data;
+        };
+
+        // Event handler for any errors in the WebSocket connection
+        socket.onerror = function(error) {
+            console.log("WebSocket error: ", error);
+            document.getElementById('dataDisplay').textContent = "WebSocket error: " + error.message;
+        };
+
+        // Event handler for when the WebSocket connection is closed
+        socket.onclose = function() {
+            console.log("WebSocket connection closed");
+            document.getElementById('dataDisplay').textContent = "WebSocket connection closed";
+        };
+    </script>
+</body>
+</html>
